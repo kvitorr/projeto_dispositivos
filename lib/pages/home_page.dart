@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/pages/product_list.dart';
 import 'package:projeto/pages/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> _widgetOptions() { 
     return <Widget>[
-      Text('Cardápio'),
+      ProductListPage(),
       Text('Carrinho'),
       Text('Histórico de Pedidos'),
       ProfilePage(userName: widget.username),

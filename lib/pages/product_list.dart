@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/pages/pickup_page.dart';
 import '../models/product.dart'; // Certifique-se de que o caminho esteja correto
 import '../services/database_service.dart'; // Importe o serviço de banco de dados
 import '../models/order.dart'; // Importe o modelo Order
@@ -17,13 +18,14 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   void initState() {
     super.initState();
-    _databaseService = DatabaseService(); // Inicializa o serviço de banco de dados
+    _databaseService =
+        DatabaseService(); // Inicializa o serviço de banco de dados
     _loadProducts();
   }
 
   Future<void> _loadProducts() async {
     final products = await _databaseService.getAllProducts();
-    
+
     setState(() {
       _products = products;
     });
@@ -36,7 +38,8 @@ class _ProductListPageState extends State<ProductListPage> {
       } else {
         _selectedProducts.add(product);
       }
-      _totalSelectedPrice = _selectedProducts.fold(0, (sum, item) => sum + item.price);
+      _totalSelectedPrice =
+          _selectedProducts.fold(0, (sum, item) => sum + item.price);
     });
   }
 
@@ -53,7 +56,9 @@ class _ProductListPageState extends State<ProductListPage> {
 
       // Exibindo uma mensagem de confirmação
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pedido confirmado! Total: R\$ ${_totalSelectedPrice.toStringAsFixed(2)}')),
+        SnackBar(
+            content: Text(
+                'Pedido confirmado! Total: R\$ ${_totalSelectedPrice.toStringAsFixed(2)}')),
       );
 
       // Limpando a seleção após a confirmação
@@ -85,9 +90,12 @@ class _ProductListPageState extends State<ProductListPage> {
 
                       return ListTile(
                         title: Text(product.name),
-                        subtitle: Text('${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),
+                        subtitle: Text(
+                            '${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),
                         trailing: Icon(
-                          isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                          isSelected
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank,
                           color: isSelected ? Colors.green : null,
                         ),
                         onTap: () => _toggleProductSelection(product),
@@ -105,7 +113,21 @@ class _ProductListPageState extends State<ProductListPage> {
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: _confirmOrder,
+                  onPressed: () async {
+                    // Navega para a página de seleção de local de retirada
+                    final selectedLocation = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectPickupLocationPage()),
+                    );
+
+                    // Verifica se o usuário selecionou um local de retirada
+                    if (selectedLocation != null) {
+                      // Lógica para salvar o pedido com o local de retirada selecionado
+                      // Adicione aqui a lógica para registrar o pedido no banco de dados ou em uma variável
+                      print('Local de retirada selecionado: $selectedLocation');
+                    }
+                  },
                   child: Text('Confirmar Pedido'),
                 ),
               ],

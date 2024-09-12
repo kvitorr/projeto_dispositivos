@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/pages/login_page.dart';
+import 'pages/product_list.dart';
 
 void main() {
   runApp(const MyApp());

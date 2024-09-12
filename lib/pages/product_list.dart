@@ -72,9 +72,6 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cardápio do Restaurante'),
-      ),
       body: Column(
         children: [
           Expanded(
@@ -115,12 +112,6 @@ class _ProductListPageState extends State<ProductListPage> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Aqui você pode adicionar a navegação para adicionar um novo produto, se quiser
-        },
-        child: Icon(Icons.add),
       ),
     );
   }

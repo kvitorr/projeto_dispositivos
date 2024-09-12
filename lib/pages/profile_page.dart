@@ -116,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
+                      color: const Color.fromARGB(255, 252, 235, 251),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Column(

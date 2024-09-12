@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/pages/order_history.dart';
 import 'package:projeto/pages/product_list.dart';
 import 'package:projeto/pages/profile_page.dart';
 
@@ -17,8 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> _widgetOptions() { 
     return <Widget>[
       ProductListPage(),
-      Text('Carrinho'),
-      Text('Histórico de Pedidos'),
+      OrderHistoryPage(),
       ProfilePage(userName: widget.username),
     ];
   }
@@ -44,10 +44,6 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
             label: 'Cardápio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Carrinho',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),

@@ -9,6 +9,7 @@ class DatabaseService {
   DatabaseService._internal();
 
   static Database? _database;
+
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
@@ -17,9 +18,12 @@ class DatabaseService {
 
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
-
     final path = join(databasePath, 'flutter_sqflite_database.db');
 
+    // Excluir o banco de dados existente
+    await deleteDatabase(path);
+
+    // Criar um novo banco de dados
     return await openDatabase(
       path,
       onCreate: _onCreate,
@@ -28,34 +32,53 @@ class DatabaseService {
     );
   }
 
-
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      "create table users (usrId INTEGER PRIMARY KEY AUTOINCREMENT, usrName TEXT UNIQUE, usrPassword TEXT)",
+      "CREATE TABLE users (usrId INTEGER PRIMARY KEY AUTOINCREMENT, usrEmail TEXT UNIQUE, usrName TEXT UNIQUE, usrNickname TEXT UNIQUE, usrPassword TEXT, biografia TEXT)",
     );
-    
   }
 
-  Future<bool> login(Users user) async {
-    final Database db = await _initDatabase();
+  Future<Map<String, dynamic>?> getUserInfo(String userName) async {
+    final Database db = await database;
 
-    // I forgot the password to check
-    var result = await db.rawQuery(
-        "select * from users where usrName = '${user.usrName}' AND usrPassword = '${user.usrPassword}'");
-    if (result.isNotEmpty) {
-      return true;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'users',
+      where: 'usrName = ?',
+      whereArgs: [userName],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first;
     } else {
-      return false;
+      return null; // Usuário não encontrado
     }
   }
 
-  //Sign up
+  Future<void> updateUserInfo(String userName, String email, String biography) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {
+        'usrEmail': email,
+        'biografia': biography,
+      },
+      where: 'usrName = ?',
+      whereArgs: [userName],
+    );
+  }
+
+  Future<bool> login(Users user) async {
+    final Database db = await database;
+
+    var result = await db.rawQuery(
+        "SELECT * FROM users WHERE usrName = ? AND usrPassword = ?",
+        [user.usrName, user.usrPassword]);
+    return result.isNotEmpty;
+  }
+
   Future<int> signup(Users user) async {
-    final Database db = await _initDatabase();
+    final Database db = await database;
 
     return db.insert('users', user.toMap());
   }
-
-
-
 }

@@ -11,6 +11,8 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   late Database _database;
   List<Product> _products = [];
+  List<Product> _selectedProducts = [];
+  double _totalSelectedPrice = 0.0;
 
   @override
   void initState() {
@@ -26,20 +28,59 @@ class _ProductListPageState extends State<ProductListPage> {
           'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL)',
         );
 
-        // Inserindo produtos iniciais
+        // Inserindo pratos iniciais
         await db.insert(
           'products',
-          Product(name: 'Produto 1', description: 'Descrição do Produto 1', price: 10.0).toMap(),
+          Product(
+            name: 'Spaghetti à Bolonhesa',
+            description: 'Macarrão spaghetti com molho de carne moída e tomates frescos.',
+            price: 35.0,
+          ).toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
         await db.insert(
           'products',
-          Product(name: 'Produto 2', description: 'Descrição do Produto 2', price: 20.0).toMap(),
+          Product(
+            name: 'Frango à Parmegiana',
+            description: 'Peito de frango empanado coberto com queijo e molho de tomate, acompanhado de arroz e batata frita.',
+            price: 40.0,
+          ).toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
         await db.insert(
           'products',
-          Product(name: 'Produto 3', description: 'Descrição do Produto 3', price: 30.0).toMap(),
+          Product(
+            name: 'Risoto de Camarão',
+            description: 'Risoto cremoso com camarões frescos e um toque de limão siciliano.',
+            price: 50.0,
+          ).toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        await db.insert(
+          'products',
+          Product(
+            name: 'Salada Caesar',
+            description: 'Alface fresca, frango grelhado, croutons, e molho Caesar caseiro.',
+            price: 25.0,
+          ).toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        await db.insert(
+          'products',
+          Product(
+            name: 'Filé Mignon ao Molho Madeira',
+            description: 'Corte nobre de filé mignon servido com molho madeira e batatas gratinadas.',
+            price: 70.0,
+          ).toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        await db.insert(
+          'products',
+          Product(
+            name: 'Tiramisu',
+            description: 'Sobremesa clássica italiana com camadas de biscoito champagne, café e creme mascarpone.',
+            price: 20.0,
+          ).toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       },
@@ -57,37 +98,55 @@ class _ProductListPageState extends State<ProductListPage> {
     });
   }
 
-  Future<void> _deleteProduct(int id) async {
-    await _database.delete(
-      'products',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-    _loadProducts(); // Recarregar lista após a exclusão
+  void _toggleProductSelection(Product product) {
+    setState(() {
+      if (_selectedProducts.contains(product)) {
+        _selectedProducts.remove(product);
+      } else {
+        _selectedProducts.add(product);
+      }
+      _totalSelectedPrice = _selectedProducts.fold(0, (sum, item) => sum + item.price);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Produtos'),
+        title: Text('Cardápio de Restaurante'),
       ),
-      body: _products.isEmpty
-          ? Center(child: Text('Nenhum produto encontrado.'))
-          : ListView.builder(
-              itemCount: _products.length,
-              itemBuilder: (context, index) {
-                final product = _products[index];
-                return ListTile(
-                  title: Text(product.name),
-                  subtitle: Text('${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteProduct(product.id!),
+      body: Column(
+        children: [
+          Expanded(
+            child: _products.isEmpty
+                ? Center(child: Text('Nenhum prato encontrado.'))
+                : ListView.builder(
+                    itemCount: _products.length,
+                    itemBuilder: (context, index) {
+                      final product = _products[index];
+                      final isSelected = _selectedProducts.contains(product);
+
+                      return ListTile(
+                        title: Text(product.name),
+                        subtitle: Text('${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),
+                        trailing: Icon(
+                          isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                          color: isSelected ? Colors.green : null,
+                        ),
+                        onTap: () => _toggleProductSelection(product),
+                      );
+                    },
                   ),
-                );
-              },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Total Selecionado: R\$ ${_totalSelectedPrice.toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Aqui você pode adicionar a navegação para adicionar um novo produto, se quiser

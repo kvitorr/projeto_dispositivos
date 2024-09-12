@@ -1,4 +1,5 @@
 import 'package:path/path.dart';
+import 'package:projeto/models/users.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
@@ -30,11 +31,31 @@ class DatabaseService {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE breeds(id INTEGER PRIMARY KEY, name TEXT, description TEXT)',
+      "create table users (usrId INTEGER PRIMARY KEY AUTOINCREMENT, usrName TEXT UNIQUE, usrPassword TEXT)",
     );
-    // Run the CREATE {dogs} TABLE statement on the database.
-    await db.execute(
-      'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER, color INTEGER, breedId INTEGER, FOREIGN KEY (breedId) REFERENCES breeds(id) ON DELETE SET NULL)',
-    );
+    
   }
+
+  Future<bool> login(Users user) async {
+    final Database db = await _initDatabase();
+
+    // I forgot the password to check
+    var result = await db.rawQuery(
+        "select * from users where usrName = '${user.usrName}' AND usrPassword = '${user.usrPassword}'");
+    if (result.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Sign up
+  Future<int> signup(Users user) async {
+    final Database db = await _initDatabase();
+
+    return db.insert('users', user.toMap());
+  }
+
+
+
 }

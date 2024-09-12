@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/models/users.dart';
-import 'package:projeto/pages/another_page.dart';
+import 'package:projeto/pages/profile_page.dart';
 import 'package:projeto/pages/signup_page.dart';
 import 'package:projeto/services/database_service.dart';
 
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       //If login is correct, then goto notes
       if (!mounted) return;
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => SimplePage()));
+          context, MaterialPageRoute(builder: (context) => ProfilePage(userName: username.text)));
     } else {
       //If not, true the bool value to show error message
       setState(() {

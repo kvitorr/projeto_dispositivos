@@ -12,6 +12,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final login = TextEditingController();
   final username = TextEditingController();
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
@@ -56,17 +57,18 @@ class _SignUpState extends State<SignUp> {
                       controller: username,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "username is required";
+                          return "Name is required";
                         }
                         return null;
                       },
                       decoration: const InputDecoration(
                         icon: Icon(Icons.person),
                         border: InputBorder.none,
-                        hintText: "Username",
+                        hintText: "Name",
                       ),
                     ),
                   ),
+
 
                   //Password field
                   Container(

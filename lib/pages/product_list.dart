@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p; // Renomeia a importação para evitar conflito
 import '../models/product.dart'; // Certifique-se de que o caminho esteja correto
 
 class ProductListPage extends StatefulWidget {
@@ -22,10 +22,16 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Future<void> _initializeDatabase() async {
     _database = await openDatabase(
-      join(await getDatabasesPath(), 'products_database.db'),
+      p.join(await getDatabasesPath(), 'restaurant_database.db'), // Use p.join para evitar o conflito
       onCreate: (db, version) async {
+        // Criando a tabela de produtos
         await db.execute(
           'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL)',
+        );
+
+        // Criando a tabela de pedidos
+        await db.execute(
+          'CREATE TABLE orders(id INTEGER PRIMARY KEY AUTOINCREMENT, total_price REAL, selected_products TEXT)',
         );
 
         // Inserindo pratos iniciais
@@ -109,6 +115,39 @@ class _ProductListPageState extends State<ProductListPage> {
     });
   }
 
+  Future<void> _confirmOrder() async {
+    if (_selectedProducts.isNotEmpty) {
+      // Serializando os produtos selecionados em uma string para salvar no banco
+      String selectedProductNames = _selectedProducts.map((p) => p.name).join(', ');
+
+      // Salvando o pedido no banco de dados
+      await _database.insert(
+        'orders',
+        {
+          'total_price': _totalSelectedPrice,
+          'selected_products': selectedProductNames,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      // Exibindo uma mensagem de confirmação
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Pedido confirmado! Total: R\$ ${_totalSelectedPrice.toStringAsFixed(2)}')),
+      );
+
+      // Limpando a seleção após a confirmação
+      setState(() {
+        _selectedProducts.clear();
+        _totalSelectedPrice = 0.0;
+      });
+    } else {
+      // Caso nenhum produto tenha sido selecionado
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nenhum prato selecionado!')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,9 +179,18 @@ class _ProductListPageState extends State<ProductListPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Total Selecionado: R\$ ${_totalSelectedPrice.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            child: Column(
+              children: [
+                Text(
+                  'Total Selecionado: R\$ ${_totalSelectedPrice.toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _confirmOrder,
+                  child: Text('Confirmar Pedido'),
+                ),
+              ],
             ),
           ),
         ],

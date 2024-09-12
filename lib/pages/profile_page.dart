@@ -83,10 +83,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Perfil do Usuário'),
-        backgroundColor: Colors.blueAccent,
-      ),
       body: userInfo == null
           ? Center(child: CircularProgressIndicator())
           : Padding(

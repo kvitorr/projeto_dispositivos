@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/models/users.dart';
-import 'package:projeto/pages/profile_page.dart';
+import 'package:projeto/pages/home_page.dart';
 import 'package:projeto/pages/signup_page.dart';
 import 'package:projeto/services/database_service.dart';
 
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       //If login is correct, then goto notes
       if (!mounted) return;
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => ProfilePage(userName: username.text)));
+          context, MaterialPageRoute(builder: (context) => MainScreen(username: username.text)));
     } else {
       //If not, true the bool value to show error message
       setState(() {
@@ -77,14 +77,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: username,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "username is required";
+                          return "Nome de usuário é obrigatório!";
                         }
                         return null;
                       },
                       decoration: const InputDecoration(
                         icon: Icon(Icons.person),
                         border: InputBorder.none,
-                        hintText: "Username",
+                        hintText: "Nome de usuário",
                       ),
                     ),
                   ),
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: password,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "password is required";
+                          return "Senha é obrigatória!";
                         }
                         return null;
                       },
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                           icon: const Icon(Icons.lock),
                           border: InputBorder.none,
-                          hintText: "Password",
+                          hintText: "Senha",
                           suffixIcon: IconButton(
                               onPressed: () {
                                 //In here we will create a click to show and hide the password a toggle button
@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Don't have an account?"),
+                      const Text("Não possui uma conta?"),
                       TextButton(
                           onPressed: () {
                             //Navigate to sign up
@@ -161,14 +161,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => const SignUp()));
                           },
-                          child: const Text("SIGN UP"))
+                          child: const Text("CADASTRAR"))
                     ],
                   ),
 
                   // We will disable this message in default, when user and pass is incorrect we will trigger this message to user
                   isLoginTrue
                       ? const Text(
-                          "Username or passowrd is incorrect",
+                          "Nome de usuário ou senha está incorreto!",
                           style: TextStyle(color: Colors.red),
                         )
                       : const SizedBox(),

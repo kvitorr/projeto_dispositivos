@@ -38,7 +38,7 @@ class _SignUpState extends State<SignUp> {
 
                   const ListTile(
                     title: Text(
-                      "Register New Account",
+                      "Cadastrar nova conta",
                       style:
                           TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                     ),
@@ -57,14 +57,14 @@ class _SignUpState extends State<SignUp> {
                       controller: username,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Name is required";
+                          return "Nome é obrigatório!";
                         }
                         return null;
                       },
                       decoration: const InputDecoration(
                         icon: Icon(Icons.person),
                         border: InputBorder.none,
-                        hintText: "Name",
+                        hintText: "Nome",
                       ),
                     ),
                   ),
@@ -82,7 +82,7 @@ class _SignUpState extends State<SignUp> {
                       controller: password,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "password is required";
+                          return "Senha é obrigatória!";
                         }
                         return null;
                       },
@@ -90,7 +90,7 @@ class _SignUpState extends State<SignUp> {
                       decoration: InputDecoration(
                           icon: const Icon(Icons.lock),
                           border: InputBorder.none,
-                          hintText: "Password",
+                          hintText: "Senha",
                           suffixIcon: IconButton(
                               onPressed: () {
                                 //In here we will create a click to show and hide the password a toggle button
@@ -118,9 +118,9 @@ class _SignUpState extends State<SignUp> {
                       controller: confirmPassword,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "password is required";
+                          return "Senha é obrigatória!";
                         } else if (password.text != confirmPassword.text) {
-                          return "Passwords don't match";
+                          return "As senhas não combinam!";
                         }
                         return null;
                       },
@@ -128,7 +128,7 @@ class _SignUpState extends State<SignUp> {
                       decoration: InputDecoration(
                           icon: const Icon(Icons.lock),
                           border: InputBorder.none,
-                          hintText: "Password",
+                          hintText: "Senha",
                           suffixIcon: IconButton(
                               onPressed: () {
                                 //In here we will create a click to show and hide the password a toggle button
@@ -172,7 +172,7 @@ class _SignUpState extends State<SignUp> {
                           }
                         },
                         child: const Text(
-                          "SIGN UP",
+                          "CADASTRAR",
                           style: TextStyle(color: Colors.white),
                         )),
                   ),
@@ -181,7 +181,7 @@ class _SignUpState extends State<SignUp> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Already have an account?"),
+                      const Text("Já possui uma conta?"),
                       TextButton(
                           onPressed: () {
                             //Navigate to sign up

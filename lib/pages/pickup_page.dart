@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SelectPickupLocationPage extends StatefulWidget {
   @override
@@ -8,10 +9,27 @@ class SelectPickupLocationPage extends StatefulWidget {
 
 class _SelectPickupLocationPageState extends State<SelectPickupLocationPage> {
   late GoogleMapController mapController;
-
-  final LatLng _pickupPoint1 = LatLng(-23.550520, -46.633308); // Ponto 1
-  final LatLng _pickupPoint2 = LatLng(-23.551520, -46.634308); // Ponto 2
+  final LatLng _pickupPoint1 = const LatLng(-23.550520, -46.633308); // Ponto 1
+  final LatLng _pickupPoint2 = const LatLng(-23.551520, -46.634308); // Ponto 2
   LatLng? _selectedPoint;
+
+  @override
+  void initState() {
+    super.initState();
+    _requestLocationPermission();
+  }
+
+  void _requestLocationPermission() async {
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      // A permissão foi concedida
+    } else if (status.isDenied || status.isPermanentlyDenied) {
+      // A permissão foi negada
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('A permissão de localização é necessária para continuar.')),
+      );
+    }
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -33,6 +51,7 @@ class _SelectPickupLocationPageState extends State<SelectPickupLocationPage> {
         children: [
           Expanded(
             child: GoogleMap(
+              myLocationEnabled: false,
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: _pickupPoint1,
@@ -57,7 +76,6 @@ class _SelectPickupLocationPageState extends State<SelectPickupLocationPage> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
-                  // Adicione a lógica para salvar o pedido com o local de retirada selecionado
                   Navigator.pop(context, _selectedPoint);
                 },
                 child: Text('Confirmar Local de Retirada'),

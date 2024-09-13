@@ -118,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   CircleAvatar(
                     radius: 60.0,
                     backgroundImage: NetworkImage(
-                        'https://i.pinimg.com/originals/ce/52/dc/ce52dc35b8f45ac6375170994814dc88.jpg'),
+                        'https://i.pinimg.com/236x/bf/cf/ea/bfcfea2175a8efd59d8a242eb3c6fd57.jpg'),
                     backgroundColor: Colors.grey.shade200,
                   ),
                   SizedBox(height: 20.0),

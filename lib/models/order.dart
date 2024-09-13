@@ -1,9 +1,19 @@
 import 'package:projeto/models/product.dart';
 
+class OrderItem {
+  final Product product;
+  final int quantity;
+
+  OrderItem({
+    required this.product,
+    required this.quantity,
+  });
+}
+
 class Order {
   final int? id;
   final double totalPrice;
-  final List<Product> selectedProducts;
+  final List<OrderItem> selectedProducts;
 
   Order({
     this.id,
@@ -12,7 +22,7 @@ class Order {
   });
 
   // Converte de Map para Order
-  factory Order.fromMap(Map<String, dynamic> map, List<Product> products) {
+  factory Order.fromMap(Map<String, dynamic> map, List<OrderItem> products) {
     return Order(
       id: map['id'],
       totalPrice: map['total_price'],

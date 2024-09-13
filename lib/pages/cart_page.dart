@@ -11,32 +11,43 @@ class CartPage extends StatelessWidget {
   CartPage({required this.selectedProducts, required this.email}); // Adicionando o userId no construtor
 
   // Função para finalizar o pedido e gravar no banco de dados
-  Future<void> _finalizeOrder(BuildContext context) async {
-    if (selectedProducts.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('O carrinho está vazio!')),
-      );
-      return;
-    }
-
-    double totalPrice = selectedProducts.entries.fold(0.0, (sum, entry) {
-      return sum + (entry.key.price * entry.value);
-    });
-
-    Order order = Order(
-      totalPrice: totalPrice,
-      selectedProducts: selectedProducts.keys.toList(),
-    );
-
-    // Inserir o pedido no banco de dados
-    await _databaseService.insertOrder(order, email);
-
+ // Função para finalizar o pedido e gravar no banco de dados
+Future<void> _finalizeOrder(BuildContext context) async {
+  if (selectedProducts.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Pedido finalizado com sucesso!')),
+      SnackBar(content: Text('O carrinho está vazio!')),
     );
-
-    Navigator.pop(context);
+    return;
   }
+
+  // Calcular o preço total
+  double totalPrice = selectedProducts.entries.fold(0.0, (sum, entry) {
+    return sum + (entry.key.price * entry.value);
+  });
+
+  // Converter selectedProducts (Map<Product, int>) para uma lista de OrderItem
+  List<OrderItem> orderItems = selectedProducts.entries.map((entry) {
+    return OrderItem(product: entry.key, quantity: entry.value);
+  }).toList();
+
+  // Criar um objeto Order com a lista de OrderItem
+  Order order = Order(
+    totalPrice: totalPrice,
+    selectedProducts: orderItems,
+  );
+
+  // Inserir o pedido no banco de dados
+  await _databaseService.insertOrder(order, email);
+
+  // Exibir uma mensagem de sucesso
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('Pedido finalizado com sucesso!')),
+  );
+
+  // Voltar para a página anterior
+  Navigator.pop(context);
+}
+
 
   @override
   Widget build(BuildContext context) {

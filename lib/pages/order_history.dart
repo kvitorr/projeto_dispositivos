@@ -68,9 +68,11 @@ class OrderDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Itens do Pedido:', style: TextStyle(fontSize: 18)),
-            ...order.selectedProducts.map((product) => Padding(
+            ...order.selectedProducts.map((orderItem) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Text('${product.name} - R\$${product.price.toStringAsFixed(2)}'),
+              child: Text(
+                '${orderItem.product.name} - Quantidade: ${orderItem.quantity} - R\$${orderItem.product.price.toStringAsFixed(2)}',
+              ),
             )),
             SizedBox(height: 10),
             Text(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../models/order.dart';
 import '../services/database_service.dart'; // Importe o serviço de banco de dados
+import 'pickup_page.dart'; // Importe a tela do Google Maps
 
 class CartPage extends StatelessWidget {
   final Map<Product, int> selectedProducts;
@@ -13,8 +14,7 @@ class CartPage extends StatelessWidget {
       {required this.selectedProducts,
       required this.email}); // Adicionando o userId no construtor
 
-  // Função para finalizar o pedido e gravar no banco de dados
-  // Função para finalizar o pedido e gravar no banco de dados
+  // Função para finalizar o pedido e redirecionar para a página de mapa
   Future<void> _finalizeOrder(BuildContext context) async {
     if (selectedProducts.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -47,8 +47,11 @@ class CartPage extends StatelessWidget {
       SnackBar(content: Text('Pedido finalizado com sucesso!')),
     );
 
-    // Voltar para a página anterior
-    Navigator.pop(context);
+    // Redirecionar para a tela de mapa para selecionar o local de entrega
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PickupPage()),
+    );
   }
 
   @override

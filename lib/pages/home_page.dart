@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/models/product.dart';
+import 'package:projeto/pages/cart_page.dart';
 import 'package:projeto/pages/order_history.dart';
 import 'package:projeto/pages/product_list.dart';
 import 'package:projeto/pages/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
-  final String username;
+  final String email;
+  final Map<Product, int> selectedProducts;
 
-  MainScreen({required this.username});
+  MainScreen({required this.email, required this.selectedProducts});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -17,9 +20,9 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> _widgetOptions() { 
     return <Widget>[
-      ProductListPage(),
-      OrderHistoryPage(),
-      ProfilePage(userName: widget.username),
+      ProductListPage(email: widget.email),
+      OrderHistoryPage(email: widget.email,),
+      ProfilePage(email: widget.email),
     ];
   }
 

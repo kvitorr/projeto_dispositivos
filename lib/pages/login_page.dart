@@ -29,13 +29,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //Now we should call this function in login button
   login() async {
-    var response = await _databaseService
-        .login(Users(usrName: username.text, usrPassword: password.text));
-    if (response == true) {
+
+
+    Users? user = await _databaseService
+        .login(Users.withoutIdAndEmail(usrName: username.text, usrPassword: password.text));
+    if (user != null) {
       //If login is correct, then goto notes
       if (!mounted) return;
+      if(user.email == null) return;
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => MainScreen(username: username.text)));
+          context, MaterialPageRoute(builder: (context) => MainScreen(email: user.email??"vitor", selectedProducts: {},)));
     } else {
       //If not, true the bool value to show error message
       setState(() {

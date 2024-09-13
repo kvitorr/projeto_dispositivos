@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:projeto/services/database_service.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String userName;
+  final String email;
 
-  ProfilePage({required this.userName});
+  ProfilePage({required this.email});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _loadUserInfo() async {
-    final info = await _databaseService.getUserInfo(widget.userName);
+    final info = await _databaseService.getUserInfo(widget.email);
     setState(() {
       userInfo = info;
     });

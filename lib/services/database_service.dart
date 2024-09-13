@@ -43,7 +43,7 @@ class DatabaseService {
       'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL)',
     );
     await db.execute(
-      'CREATE TABLE orders(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, total_price REAL, selected_products TEXT)',
+      'CREATE TABLE orders(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, total_price REAL, selected_products TEXT, pickup_location TEXT)',
     );
 
     await db.execute(
@@ -228,28 +228,27 @@ class DatabaseService {
   }
 
   // Método para inserir um pedido
-  // Método para inserir um pedido
-Future<void> insertOrder(Order order, String email) async {
-  final db = await database;
+  Future<void> insertOrder(Order order, String email) async {
+    final db = await database;
 
-  // Começar uma transação
-  await db.transaction((txn) async {
-    // Inserir o pedido na tabela orders
-    int orderId = await txn.insert('orders', {
-      'total_price': order.totalPrice,
-      'email': email
-      // Se houver outros campos, inclua aqui
-    });
-
-    // Inserir cada item na tabela order_items
-    for (OrderItem orderItem in order.selectedProducts) {
-      await txn.insert('order_items', {
-        'order_id': orderId,
-        'product_id': orderItem.product.id, // Acessa o produto dentro de OrderItem
-        'quantity': orderItem.quantity,     // Acessa a quantidade dentro de OrderItem
+    // Começar uma transação
+    await db.transaction((txn) async {
+      // Inserir o pedido na tabela orders
+      int orderId = await txn.insert('orders', {
+        'total_price': order.totalPrice,
+        'email': email,
+        'pickup_location': order.pickupLocation, // Adicionar o local de retirada
+        // Se houver outros campos, inclua aqui
       });
-    }
-  });
-}
 
+      // Inserir cada item na tabela order_items
+      for (OrderItem orderItem in order.selectedProducts) {
+        await txn.insert('order_items', {
+          'order_id': orderId,
+          'product_id': orderItem.product.id, // Acessa o produto dentro de OrderItem
+          'quantity': orderItem.quantity,     // Acessa a quantidade dentro de OrderItem
+        });
+      }
+    });
+  }
 }

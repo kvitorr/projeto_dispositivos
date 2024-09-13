@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart'; // Certifique-se de que o caminho esteja correto
 import '../services/database_service.dart'; // Importe o serviço de banco de dados
-import '../models/order.dart'; // Importe o modelo Order
 import 'cart_page.dart'; // Importe a página do carrinho
 
 class ProductListPage extends StatefulWidget {

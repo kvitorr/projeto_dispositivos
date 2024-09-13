@@ -40,7 +40,7 @@ class DatabaseService {
     );
 
     await db.execute(
-      'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL)',
+      'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, price REAL, url TEXT)',
     );
     await db.execute(
       'CREATE TABLE orders(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, total_price REAL, selected_products TEXT, pickup_location TEXT)',
@@ -66,6 +66,7 @@ class DatabaseService {
         description:
             'Macarrão spaghetti com molho de carne moída e tomates frescos.',
         price: 35.0,
+        url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5yv4yJmGa9aIwpirzERd8q_OxLUgQnf50xg&s"
       ).toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -76,6 +77,7 @@ class DatabaseService {
         description:
             'Peito de frango empanado coberto com queijo e molho de tomate, acompanhado de arroz e batata frita.',
         price: 40.0,
+        url: 'https://www.receiteria.com.br/wp-content/uploads/file-de-frango-parmegiana.jpeg'
       ).toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -86,6 +88,7 @@ class DatabaseService {
         description:
             'Risoto cremoso com camarões frescos e um toque de limão siciliano.',
         price: 50.0,
+        url: 'https://www.receiteria.com.br/wp-content/uploads/risoto-de-camarao-14.jpg'
       ).toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -96,6 +99,7 @@ class DatabaseService {
         description:
             'Alface fresca, frango grelhado, croutons, e molho Caesar caseiro.',
         price: 25.0,
+        url: 'https://p2.trrsf.com/image/fget/cf/1200/900/middle/images.terra.com/2023/02/28/whatsapp-image-2023-02-28-at-01-53-47-(1)-1iyhprrq5e9tc.jpeg'
       ).toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -106,6 +110,7 @@ class DatabaseService {
         description:
             'Corte nobre de filé mignon servido com molho madeira e batatas gratinadas.',
         price: 70.0,
+        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRjTTu4BHXEpljv3uksYe8ggZdGLyKmhZ7kw&s'
       ).toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -116,6 +121,7 @@ class DatabaseService {
         description:
             'Sobremesa clássica italiana com camadas de biscoito champagne, café e creme mascarpone.',
         price: 20.0,
+        url: 'https://static.itdg.com.br/images/1200-675/4667c6b17f2c045e601de0d092c2d318/339498-original-1-.jpg'
       ).toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

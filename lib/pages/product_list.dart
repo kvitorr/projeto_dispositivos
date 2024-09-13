@@ -120,6 +120,12 @@ class _ProductListPageState extends State<ProductListPage> {
                       final quantity = _selectedProducts[product] ?? 0;
 
                       return ListTile(
+                        leading: Image.network(
+                          product.url,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
                         title: Text(product.name),
                         subtitle: Text(
                             '${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),

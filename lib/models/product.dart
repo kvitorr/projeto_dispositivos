@@ -3,12 +3,14 @@ class Product {
   final String name;
   final String description;
   final double price;
+  final String url;
 
   Product({
     this.id, // Torne o id opcional
     required this.name,
     required this.description,
     required this.price,
+    required this.url
   });
 
   // Convertendo Produto para Map para salvar no banco de dados
@@ -18,6 +20,7 @@ class Product {
       'name': name,
       'description': description,
       'price': price,
+      'url': url
     };
   }
 
@@ -28,6 +31,7 @@ class Product {
       name: map['name'],
       description: map['description'],
       price: map['price'],
+      url: map['url']
     );
   }
 }

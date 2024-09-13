@@ -42,8 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
     final TextEditingController nameController =
         TextEditingController(text: userInfo!['usrName']);
-    final TextEditingController emailController =
-        TextEditingController(text: userInfo!['usrEmail']);
     final TextEditingController bioController =
         TextEditingController(text: userInfo!['biografia']);
 
@@ -58,8 +56,8 @@ class _ProfilePageState extends State<ProfilePage> {
             child: ListBody(
               children: <Widget>[
                 TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(labelText: 'E-mail'),
+                  controller: nameController,
+                  decoration: InputDecoration(labelText: 'Nome'),
                 ),
                 TextField(
                   controller: bioController,
@@ -80,11 +78,15 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () async {
                 await _databaseService.updateUserInfo(
                   nameController.text,
-                  emailController.text,
-                  bioController.text,
+                  userInfo?['email'],
+                  (bioController.text)
                 );
-                Navigator.of(context).pop(); // Fecha o diálogo
-                _loadUserInfo(); // Recarrega as informações do usuário
+
+                // Certifique-se de recarregar os dados do usuário antes de fechar o diálogo
+                await _loadUserInfo();
+
+                // Fecha o diálogo após salvar e carregar as informações
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -129,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 10.0),
                   Text(
-                    userInfo!['usrEmail'] ?? 'E-mail não disponível',
+                    userInfo!['email'] ?? 'E-mail não disponível',
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Colors.grey.shade600,

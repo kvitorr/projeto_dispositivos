@@ -39,7 +39,7 @@ class _SignUpState extends State<SignUp> {
 
                   const ListTile(
                     title: Text(
-                      "Cadastrar nova conta",
+                      "Cadastre-se",
                       style:
                           TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                     ),
@@ -53,7 +53,7 @@ class _SignUpState extends State<SignUp> {
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
+                        color: Color.fromARGB(255, 255, 221, 228)),
                     child: TextFormField(
                       controller: username,
                       validator: (value) {
@@ -77,7 +77,7 @@ class _SignUpState extends State<SignUp> {
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
+                        color: Color.fromARGB(255, 255, 221, 228)),
                     child: TextFormField(
                       controller: email,
                       validator: (value) {
@@ -102,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
+                        color: Color.fromARGB(255, 255, 221, 228)),
                     child: TextFormField(
                       controller: password,
                       validator: (value) {
@@ -138,7 +138,7 @@ class _SignUpState extends State<SignUp> {
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
+                        color: Color.fromARGB(255, 255, 221, 228)),
                     child: TextFormField(
                       controller: confirmPassword,
                       validator: (value) {
@@ -175,7 +175,7 @@ class _SignUpState extends State<SignUp> {
                     width: MediaQuery.of(context).size.width * .9,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple),
+                        color: Color(0xFFBF0603)),
                     child: TextButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {

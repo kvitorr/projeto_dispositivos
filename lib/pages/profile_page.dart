@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/services/database_service.dart';
+import 'package:projeto/pages/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final String email;
@@ -28,16 +29,28 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  Future<void> _logout(BuildContext context) async {
+    // Aqui você pode adicionar lógica de logout, como limpar tokens, etc.
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (Route<dynamic> route) => false, // Remove todas as rotas anteriores
+    );
+  }
+
   Future<void> _showEditDialog(BuildContext context) async {
     if (userInfo == null) return;
 
-    final TextEditingController nameController = TextEditingController(text: userInfo!['usrName']);
-    final TextEditingController emailController = TextEditingController(text: userInfo!['usrEmail']);
-    final TextEditingController bioController = TextEditingController(text: userInfo!['biografia']);
+    final TextEditingController nameController =
+        TextEditingController(text: userInfo!['usrName']);
+    final TextEditingController emailController =
+        TextEditingController(text: userInfo!['usrEmail']);
+    final TextEditingController bioController =
+        TextEditingController(text: userInfo!['biografia']);
 
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // O usuário deve tocar em "Salvar" ou "Cancelar"
+      barrierDismissible:
+          false, // O usuário deve tocar em "Salvar" ou "Cancelar"
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Editar Perfil'),
@@ -83,6 +96,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove a seta de voltar
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            color: Color(0xFFBF0603),
+            onPressed: () => _logout(context),
+          ),
+        ],
+      ),
       body: userInfo == null
           ? Center(child: CircularProgressIndicator())
           : Padding(
@@ -92,7 +115,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   CircleAvatar(
                     radius: 60.0,
-                    backgroundImage: NetworkImage('https://i.pinimg.com/originals/ce/52/dc/ce52dc35b8f45ac6375170994814dc88.jpg'),
+                    backgroundImage: NetworkImage(
+                        'https://i.pinimg.com/originals/ce/52/dc/ce52dc35b8f45ac6375170994814dc88.jpg'),
                     backgroundColor: Colors.grey.shade200,
                   ),
                   SizedBox(height: 20.0),
@@ -116,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 252, 235, 251),
+                      color: Color.fromARGB(255, 255, 221, 228),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Column(
@@ -145,7 +169,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () => _showEditDialog(context),
                     child: Text('Editar Perfil'),
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                      backgroundColor:
+                          Color(0xFFBF0603), // Cor de fundo do botão
+                      foregroundColor: Colors.white, // Cor do texto do botão
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
                       textStyle: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,

@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   //Before we show the image, after we copied the image we need to define the location in pubspec.yaml
                   Image.asset(
-                    "lib/assets/login.png",
+                    "lib/assets/snacks.png",
                     width: 210,
                   ),
                   const SizedBox(height: 15),
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
+                        color: Color.fromARGB(255, 255, 221, 228)),
                     child: TextFormField(
                       controller: username,
                       validator: (value) {
@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
+                        color: Color.fromARGB(255, 255, 221, 228)),
                     child: TextFormField(
                       controller: password,
                       validator: (value) {
@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: MediaQuery.of(context).size.width * .9,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple),
+                        color: Color(0xFFBF0603)),
                     child: TextButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {

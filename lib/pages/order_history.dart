@@ -13,7 +13,8 @@ class OrderHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Histórico de Pedidos'),
+        title: Text('Meus Pedidos'),
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Order>>(
         future: _databaseService.getOrdersByUser(email), // Buscar pedidos do usuário

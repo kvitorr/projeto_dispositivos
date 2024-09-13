@@ -8,7 +8,6 @@ class ProductListPage extends StatefulWidget {
   final String email;
   ProductListPage({required this.email});
 
-
   @override
   _ProductListPageState createState() => _ProductListPageState();
 }
@@ -16,20 +15,22 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   late DatabaseService _databaseService;
   List<Product> _products = [];
-  Map<Product, int> _selectedProducts = {}; // Map para armazenar produtos e suas quantidades
+  Map<Product, int> _selectedProducts =
+      {}; // Map para armazenar produtos e suas quantidades
   List<Product> _cartItems = []; // Lista para armazenar os produtos no carrinho
   double _totalSelectedPrice = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _databaseService = DatabaseService(); // Inicializa o serviço de banco de dados
+    _databaseService =
+        DatabaseService(); // Inicializa o serviço de banco de dados
     _loadProducts();
   }
 
   Future<void> _loadProducts() async {
     final products = await _databaseService.getAllProducts();
-    
+
     setState(() {
       _products = products;
     });
@@ -48,7 +49,8 @@ class _ProductListPageState extends State<ProductListPage> {
 
   void _decreaseQuantity(Product product) {
     setState(() {
-      if (_selectedProducts.containsKey(product) && _selectedProducts[product]! > 1) {
+      if (_selectedProducts.containsKey(product) &&
+          _selectedProducts[product]! > 1) {
         _selectedProducts[product] = _selectedProducts[product]! - 1;
       } else {
         _selectedProducts.remove(product);
@@ -59,7 +61,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   void _calculateTotalPrice() {
     _totalSelectedPrice = _selectedProducts.entries.fold(
-      0.0, 
+      0.0,
       (sum, entry) => sum + entry.key.price * entry.value,
     );
   }
@@ -69,7 +71,8 @@ class _ProductListPageState extends State<ProductListPage> {
     setState(() {
       _selectedProducts.forEach((product, quantity) {
         for (int i = 0; i < quantity; i++) {
-          _cartItems.add(product); // Adiciona os produtos ao carrinho com suas quantidades
+          _cartItems.add(
+              product); // Adiciona os produtos ao carrinho com suas quantidades
         }
       });
     });
@@ -84,7 +87,10 @@ class _ProductListPageState extends State<ProductListPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CartPage(selectedProducts: _selectedProducts, email: widget.email,), // Passando os itens do carrinho para a nova página
+        builder: (context) => CartPage(
+          selectedProducts: _selectedProducts,
+          email: widget.email,
+        ), // Passando os itens do carrinho para a nova página
       ),
     );
   }
@@ -93,13 +99,15 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Produtos'),
+        title: Text('Cardápio'),
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart),
+            color: Color(0xFFBF0603),
             onPressed: _goToCartPage, // Navega para o carrinho
           ),
         ],
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
@@ -114,13 +122,16 @@ class _ProductListPageState extends State<ProductListPage> {
 
                       return ListTile(
                         title: Text(product.name),
-                        subtitle: Text('${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),
+                        subtitle: Text(
+                            '${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
                               icon: Icon(Icons.remove),
-                              onPressed: quantity > 0 ? () => _decreaseQuantity(product) : null,
+                              onPressed: quantity > 0
+                                  ? () => _decreaseQuantity(product)
+                                  : null,
                             ),
                             Text(quantity.toString()),
                             IconButton(
@@ -143,7 +154,13 @@ class _ProductListPageState extends State<ProductListPage> {
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: _selectedProducts.isNotEmpty ? _addAllToCart : null, // Adiciona todos os itens ao carrinho
+                  onPressed: _selectedProducts.isNotEmpty
+                      ? _addAllToCart
+                      : null, // Adiciona todos os itens ao carrinho
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFBF0603), // Cor de fundo do botão
+                    foregroundColor: Colors.white, // Cor do texto do botão
+                  ),
                   child: Text('Adicionar Todos ao Carrinho'),
                 ),
               ],

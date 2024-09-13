@@ -14,6 +14,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final login = TextEditingController();
   final username = TextEditingController();
+  final email = TextEditingController();
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
 
@@ -65,6 +66,30 @@ class _SignUpState extends State<SignUp> {
                         icon: Icon(Icons.person),
                         border: InputBorder.none,
                         hintText: "Nome",
+                      ),
+                    ),
+                  ),
+
+                  
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.deepPurple.withOpacity(.2)),
+                    child: TextFormField(
+                      controller: email,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Email é obrigatório!";
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.person),
+                        border: InputBorder.none,
+                        hintText: "Email",
                       ),
                     ),
                   ),
@@ -160,7 +185,8 @@ class _SignUpState extends State<SignUp> {
                             _databaseService
                                 .signup(Users(
                                     usrName: username.text,
-                                    usrPassword: password.text))
+                                    usrPassword: password.text,
+                                    email: email.text))
                                 .whenComplete(() {
                               //After success user creation go to login screen
                               Navigator.push(

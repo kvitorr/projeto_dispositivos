@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import '../models/product.dart'; // Certifique-se de que o caminho esteja correto
 import '../services/database_service.dart'; // Importe o serviço de banco de dados
 import '../models/order.dart'; // Importe o modelo Order
+import 'cart_page.dart'; // Importe a página do carrinho
 
 class ProductListPage extends StatefulWidget {
+  final String email;
+  ProductListPage({required this.email});
+
+
   @override
   _ProductListPageState createState() => _ProductListPageState();
 }
@@ -11,7 +16,8 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
   late DatabaseService _databaseService;
   List<Product> _products = [];
-  List<Product> _selectedProducts = [];
+  Map<Product, int> _selectedProducts = {}; // Map para armazenar produtos e suas quantidades
+  List<Product> _cartItems = []; // Lista para armazenar os produtos no carrinho
   double _totalSelectedPrice = 0.0;
 
   @override
@@ -29,68 +35,100 @@ class _ProductListPageState extends State<ProductListPage> {
     });
   }
 
-  void _toggleProductSelection(Product product) {
+  void _increaseQuantity(Product product) {
     setState(() {
-      if (_selectedProducts.contains(product)) {
-        _selectedProducts.remove(product);
+      if (_selectedProducts.containsKey(product)) {
+        _selectedProducts[product] = _selectedProducts[product]! + 1;
       } else {
-        _selectedProducts.add(product);
+        _selectedProducts[product] = 1;
       }
-      _totalSelectedPrice = _selectedProducts.fold(0, (sum, item) => sum + item.price);
+      _calculateTotalPrice();
     });
   }
 
-  Future<void> _confirmOrder() async {
-    if (_selectedProducts.isNotEmpty) {
-      // Criando um novo pedido
-      Order order = Order(
-        totalPrice: _totalSelectedPrice,
-        selectedProducts: _selectedProducts,
-      );
+  void _decreaseQuantity(Product product) {
+    setState(() {
+      if (_selectedProducts.containsKey(product) && _selectedProducts[product]! > 1) {
+        _selectedProducts[product] = _selectedProducts[product]! - 1;
+      } else {
+        _selectedProducts.remove(product);
+      }
+      _calculateTotalPrice();
+    });
+  }
 
-      // Salvando o pedido no banco de dados usando o DatabaseService
-      await _databaseService.insertOrder(order);
+  void _calculateTotalPrice() {
+    _totalSelectedPrice = _selectedProducts.entries.fold(
+      0.0, 
+      (sum, entry) => sum + entry.key.price * entry.value,
+    );
+  }
 
-      // Exibindo uma mensagem de confirmação
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pedido confirmado! Total: R\$ ${_totalSelectedPrice.toStringAsFixed(2)}')),
-      );
-
-      // Limpando a seleção após a confirmação
-      setState(() {
-        _selectedProducts.clear();
-        _totalSelectedPrice = 0.0;
+  // Função para adicionar todos os itens ao carrinho
+  void _addAllToCart() {
+    setState(() {
+      _selectedProducts.forEach((product, quantity) {
+        for (int i = 0; i < quantity; i++) {
+          _cartItems.add(product); // Adiciona os produtos ao carrinho com suas quantidades
+        }
       });
-    } else {
-      // Caso nenhum produto tenha sido selecionado
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Nenhum prato selecionado!')),
-      );
-    }
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Todos os itens foram adicionados ao carrinho!')),
+    );
+  }
+
+  // Navegar para a página do carrinho
+  void _goToCartPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartPage(selectedProducts: _selectedProducts, email: widget.email,), // Passando os itens do carrinho para a nova página
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Lista de Produtos'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: _goToCartPage, // Navega para o carrinho
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
             child: _products.isEmpty
-                ? Center(child: Text('Nenhum prato encontrado.'))
+                ? Center(child: Text('Nenhum produto encontrado.'))
                 : ListView.builder(
                     itemCount: _products.length,
                     itemBuilder: (context, index) {
                       final product = _products[index];
-                      final isSelected = _selectedProducts.contains(product);
+                      final quantity = _selectedProducts[product] ?? 0;
 
                       return ListTile(
                         title: Text(product.name),
                         subtitle: Text('${product.description}\nR\$ ${product.price.toStringAsFixed(2)}'),
-                        trailing: Icon(
-                          isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-                          color: isSelected ? Colors.green : null,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: quantity > 0 ? () => _decreaseQuantity(product) : null,
+                            ),
+                            Text(quantity.toString()),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () => _increaseQuantity(product),
+                            ),
+                          ],
                         ),
-                        onTap: () => _toggleProductSelection(product),
                       );
                     },
                   ),
@@ -105,8 +143,8 @@ class _ProductListPageState extends State<ProductListPage> {
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: _confirmOrder,
-                  child: Text('Confirmar Pedido'),
+                  onPressed: _selectedProducts.isNotEmpty ? _addAllToCart : null, // Adiciona todos os itens ao carrinho
+                  child: Text('Adicionar Todos ao Carrinho'),
                 ),
               ],
             ),

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/services/database_service.dart';
 import 'package:projeto/models/order.dart';
+import 'package:projeto/models/users.dart';
 
 class OrderHistoryPage extends StatelessWidget {
-  final DatabaseService dbService = DatabaseService();
+  final String email;
+  final DatabaseService _databaseService = DatabaseService();
+
+  OrderHistoryPage({required this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +16,7 @@ class OrderHistoryPage extends StatelessWidget {
         title: Text('Histórico de Pedidos'),
       ),
       body: FutureBuilder<List<Order>>(
-        future: dbService.getAllOrders(), // Método para buscar pedidos salvos
+        future: _databaseService.getOrdersByUser(email), // Buscar pedidos do usuário
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -30,7 +34,6 @@ class OrderHistoryPage extends StatelessWidget {
                   title: Text('Pedido #${order.id}'),
                   subtitle: Text('Total: R\$${order.totalPrice.toStringAsFixed(2)}'),
                   onTap: () {
-                    // Detalhes do pedido podem ser mostrados em uma nova tela
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -65,9 +68,17 @@ class OrderDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Itens do Pedido:', style: TextStyle(fontSize: 18)),
-            Text(order.toString()),
+            ...order.selectedProducts.map((orderItem) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Text(
+                '${orderItem.product.name} - Quantidade: ${orderItem.quantity} - R\$${orderItem.product.price.toStringAsFixed(2)}',
+              ),
+            )),
             SizedBox(height: 10),
-            Text('Total: R\$${order.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              'Total: R\$${order.totalPrice.toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),

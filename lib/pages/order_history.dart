@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/services/database_service.dart';
 import 'package:projeto/models/order.dart';
-import 'package:projeto/models/users.dart';
 
 class OrderHistoryPage extends StatelessWidget {
   final String email;
@@ -33,7 +32,13 @@ class OrderHistoryPage extends StatelessWidget {
                 final order = orders[index];
                 return ListTile(
                   title: Text('Pedido #${order.id}'),
-                  subtitle: Text('Total: R\$${order.totalPrice.toStringAsFixed(2)}'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Total: R\$${order.totalPrice.toStringAsFixed(2)}'),
+                      Text('Local de Retirada: ${order.pickupLocation}'), // Exibir local de retirada
+                    ],
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -79,6 +84,11 @@ class OrderDetailPage extends StatelessWidget {
             Text(
               'Total: R\$${order.totalPrice.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Local de Retirada: ${order.pickupLocation}', // Exibir local de retirada
+              style: TextStyle(fontSize: 18),
             ),
           ],
         ),

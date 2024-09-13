@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:projeto/pages/home_page.dart';
 import '../models/product.dart';
 import '../models/order.dart';
+import '../pages/pickup_page.dart';
 import '../services/database_service.dart'; // Importe o serviço de banco de dados
 
 class CartPage extends StatelessWidget {
@@ -13,7 +15,6 @@ class CartPage extends StatelessWidget {
       {required this.selectedProducts,
       required this.email}); // Adicionando o userId no construtor
 
-  // Função para finalizar o pedido e gravar no banco de dados
   // Função para finalizar o pedido e gravar no banco de dados
   Future<void> _finalizeOrder(BuildContext context) async {
     if (selectedProducts.isEmpty) {
@@ -33,10 +34,25 @@ class CartPage extends StatelessWidget {
       return OrderItem(product: entry.key, quantity: entry.value);
     }).toList();
 
-    // Criar um objeto Order com a lista de OrderItem
+    // Navegar para a página de seleção de retirada e aguardar o resultado
+    var result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectPickupLocationPage()),
+    );
+
+    // Verificar se um local de retirada foi selecionado
+    if (result == null || result['location'] == null || result['name'] == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nenhum local de retirada selecionado!')),
+      );
+      return;
+    }
+
+    // Criar um objeto Order com a lista de OrderItem e o local de retirada
     Order order = Order(
       totalPrice: totalPrice,
       selectedProducts: orderItems,
+      pickupLocation: result['name'], // Adicionar o local de retirada ao pedido
     );
 
     // Inserir o pedido no banco de dados
@@ -47,8 +63,13 @@ class CartPage extends StatelessWidget {
       SnackBar(content: Text('Pedido finalizado com sucesso!')),
     );
 
-    // Voltar para a página anterior
-    Navigator.pop(context);
+    // Após finalizar o pedido, navegue para a tela de histórico de pedidos
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MainScreen(email: email, selectedProducts: selectedProducts),
+      ),
+    );
   }
 
   @override
@@ -87,7 +108,7 @@ class CartPage extends StatelessWidget {
                           Color(0xFFBF0603), // Cor de fundo do botão
                       foregroundColor: Colors.white, // Cor do texto do botão
                     ),
-                    child: Text('Finalizar Pedido'),
+                    child: Text('Escolher Local de Retirada'),
                   ),
                 ),
               ],

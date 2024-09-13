@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projeto/models/product.dart';
-import 'package:projeto/pages/cart_page.dart';
 import 'package:projeto/pages/order_history.dart';
 import 'package:projeto/pages/product_list.dart';
 import 'package:projeto/pages/profile_page.dart';
@@ -36,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Snacks', 
+        title: Text('Snacks', 
         style: TextStyle(
             color: Colors.white, // Altere a cor para a desejada
             fontSize: 20, // Tamanho da fonte (opcional)

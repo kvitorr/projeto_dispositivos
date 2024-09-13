@@ -143,11 +143,11 @@ class DatabaseService {
     await db.update(
       'users',
       {
-        'usrEmail': email,
+        'usrName': userName,
         'biografia': biography,
       },
-      where: 'usrName = ?',
-      whereArgs: [userName],
+      where: 'email = ?',
+      whereArgs: [email],
     );
   }
 

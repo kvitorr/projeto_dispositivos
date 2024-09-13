@@ -36,8 +36,16 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Snacks'),
-        backgroundColor: const Color.fromARGB(255, 192, 156, 255),
+        title: Text('Flutter Snacks', 
+        style: TextStyle(
+            color: Colors.white, // Altere a cor para a desejada
+            fontSize: 20, // Tamanho da fonte (opcional)
+            fontWeight: FontWeight.bold, // Estilo da fonte (opcional)
+          ),
+          ),
+        centerTitle: true,
+        backgroundColor: Color(0xFFBF0603),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: _widgetOptions().elementAt(_selectedIndex),
@@ -50,15 +58,15 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'Histórico de Pedidos',
+            label: 'Pedidos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Usuário',
+            label: 'Perfil',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 162, 0, 255),
+        selectedItemColor: Color(0xFFBF0603),
         unselectedItemColor: const Color.fromARGB(255, 73, 73, 73),
         onTap: _onItemTapped,
       ),
